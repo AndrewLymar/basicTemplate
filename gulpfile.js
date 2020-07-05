@@ -1,38 +1,41 @@
-let gulp = require('gulp'),
-	gutil = require('gulp-util'),
-	sass = require('gulp-sass'),
-	browserSync = require('browser-sync').create(),
-	concat = require('gulp-concat'),
-	uglify = require('gulp-uglify'),
-	cleanCSS = require('gulp-clean-css'),
-	concatCss = require('gulp-concat-css'),
-	rename = require('gulp-rename'),
-	del = require('del'),
-	imagemin = require('gulp-imagemin'),
-	cache = require('gulp-cache'),
-	svgSprite = require('gulp-svg-sprite'),
-	svgmin = require('gulp-svgmin'),
-	cheerio = require('gulp-cheerio'),
-	replace = require('gulp-replace'),
-	autoprefixer = require('gulp-autoprefixer'),
-	ftp = require('vinyl-ftp'),
-	notify = require("gulp-notify");
+const gulp = require('gulp'),
+      gutil = require('gulp-util'),
+	  sass = require('gulp-sass'),
+	  browserSync = require('browser-sync').create(),
+	  concat = require('gulp-concat'),
+	  uglify = require('gulp-uglify-es').default,
+	  cleanCSS = require('gulp-clean-css'),
+	  concatCss = require('gulp-concat-css'),
+	  rename = require('gulp-rename'),
+	  del = require('del'),
+	  imagemin = require('gulp-imagemin'),
+	  cache = require('gulp-cache'),
+	  svgSprite = require('gulp-svg-sprite'),
+	  svgmin = require('gulp-svgmin'),
+	  cheerio = require('gulp-cheerio'),
+	  replace = require('gulp-replace'),
+	  autoprefixer = require('gulp-autoprefixer'),
+	  notify = require("gulp-notify");
 
 gulp.task('sass', function () {
-	return gulp.src('app/styles/scss/**/*.scss')
+	return gulp.src('app/scss/**/*.scss')
 		.pipe(sass({
 			outputStyle: 'expand'
 		}).on("error", notify.onError()))
-		.pipe(gulp.dest('app/styles/css'));
+		.pipe(gulp.dest('app/css'));
 });
 
 gulp.task('css', function () {
-	return gulp.src('app/styles/css/**/*.css')
+	return gulp.src([
+        'app/css/normalize.css',
+        'app/css/my-reset.css',
+        'app/css/main.css'
+        ])
 		.pipe(autoprefixer(['last 3 versions']))
 		.pipe(cleanCSS({
 			level: 2
 		}))
-		.pipe(concatCss("style.min.css"))
+		.pipe(concatCss('style.min.css'))
 		.pipe(gulp.dest('app'))
 });
 
@@ -112,36 +115,16 @@ gulp.task('move', function (done) {
 	done();
 });
 
-gulp.task('deploy', function () {
-
-	let conn = ftp.create({
-		host: 'hostname.com',
-		user: 'username',
-		password: 'userpassword',
-		parallel: 10,
-		log: gutil.log
-	});
-
-	let globs = [
-	'dist/**',
-	'dist/.htaccess',
-	];
-	return gulp.src(globs, {
-			buffer: false
-		})
-		.pipe(conn.dest('/path/to/folder/on/server'));
-});
-
 gulp.task('watch', function (done) {
 	browserSync.init({
 		server: "app"
 	});
-	gulp.watch('app/styles/scss/**/*.scss', gulp.series('sass'));
-	gulp.watch('app/styles/css/**/*.css', gulp.series('css'));
+	gulp.watch('app/scss/**/*.scss', gulp.series('sass'));
+	gulp.watch('app/css/**/*.css', gulp.series('css'));
 	gulp.watch('app/js/**/*.js', gulp.series('js'));
 	gulp.watch('app/*.html').on("change", browserSync.reload);
-	gulp.watch('app/styles/scss/**/*.scss').on('change', browserSync.reload);
-	gulp.watch('app/styles/css/**/*.css').on('change', browserSync.reload);
+	gulp.watch('app/scss/**/*.scss').on('change', browserSync.reload);
+	gulp.watch('app/css/**/*.css').on('change', browserSync.reload);
 	gulp.watch('app/js/**/*.js').on('change', browserSync.reload);
 	done();
 });

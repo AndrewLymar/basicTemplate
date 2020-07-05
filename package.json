@@ -1,6 +1,6 @@
 {
   "name": "basicTemplate",
-  "version": "2.0.0",
+  "version": "2.1.0",
   "description": "my start HTML template",
   "main": "index.js",
   "scripts": {
@@ -26,7 +26,7 @@
     "gulp-sass": "latest",
     "gulp-svg-sprite": "latest",
     "gulp-svgmin": "latest",
-    "gulp-uglify": "latest",
+    "gulp-uglify-es": "latest",
     "gulp-util": "latest",
     "vinyl-ftp": "latest"
   }
