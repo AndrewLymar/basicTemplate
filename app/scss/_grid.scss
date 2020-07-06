@@ -1,13 +1,16 @@
+.container {
+    width: 100%;
+    max-width: container-width;
+    margin-left: auto;
+    margin-right: auto;
+    padding-left: 25px;
+    padding-right: 25px;
+}
+
 .gap {
 	> * {
 		margin: 0 $gap-size;
 	}
-}
-
-.container {
-	width: 100%;
-	max-width: $container-width;
-	margin: 0 auto;
 }
 
 .flex-row {
